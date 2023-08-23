@@ -1,36 +1,26 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Button from "./components/UI/Button/Button";
 
 import "./App.css";
 import Demo from "./components/Demo/Demo";
 
 function App() {
-  const [showParagraph, setShowParagraph] = useState(false);
-  const [allowToggle, setAllowToggle] = useState(false);
+  const [listTitle, setListTitle] = useState("My List");
 
-  console.log("App running"); // check re-evaluation
+  const changeTitleHandler = useCallback(() => {
+    setListTitle("New Title");
+  }, []);
 
-  const toggleParagraphHandler = useCallback(() => {
-    if (allowToggle) {
-      setShowParagraph((prevState) => {
-        return !prevState;
-      });
-    }
-  }, [allowToggle]);
-  // we know that this function will never change and we use useCallback to store it
-
-  const allowToggleHandler = () => {
-    setAllowToggle(true);
-  };
+  const listItems = useMemo(() => [5, 3, 1, 10, 9], []);
+  // now we'll not sort the list unnecessery again and again
 
   return (
     <div className="app">
-      <h1>Hi there!</h1>
-      <Demo show={showParagraph} />
-      <Button onClick={toggleParagraphHandler}>Show paragraph</Button>
-      <Button onClick={allowToggleHandler}>Allow Toggle</Button>
+      <Demo title={listTitle} items={listItems} />
+      <Button onClick={changeTitleHandler}>Change Title</Button>
     </div>
   );
 }
-
+// Batching:
+// React React groups multiple state updates into a single re-render for better performance
 export default App;

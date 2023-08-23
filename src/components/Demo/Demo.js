@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
+
+import classes from "./Demo.module.css";
 
 const Demo = (props) => {
-  return <p>{props.show ? "This is new" : ""}</p>;
+  const { items } = props;
+
+  const sortedList = useMemo(() => {
+    console.log("items sorted");
+    return items.sort((a, b) => a - b);
+  }, [items]);
+  //// now we'll not sort the list unnecessery again and again
+  return (
+    <div className={classes.list}>
+      <h2>{props.title}</h2>
+      <ul>
+        {sortedList.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default React.memo(Demo);
-//react looking if the props change, if not the cmpnt doesn't re-evaluate
